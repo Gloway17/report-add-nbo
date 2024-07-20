@@ -5,14 +5,19 @@
 uint32_t read_number_at_file_and_ntohl(char *filename) {
     uint32_t buffer;
 
-    FILE *file = fopen(filename, "rb");
-    if (!file) {
+    FILE *fp = fopen(filename, "rb");
+    if (!fp) {
         printf("%s can not be open!\n", filename);
         return -1;
     }
-    fread(&buffer, sizeof(buffer), 1, file);
+    fread(&buffer, sizeof(buffer), 1, fp);
 
-    fclose(file);
+    if (ftell(fp) < 4) {
+        printf("%s is smaller than 4bytes.\n", filename);
+        return -1;
+    }
+
+    fclose(fp);
 
     return ntohl(buffer);
 }
@@ -26,7 +31,6 @@ int main(int argc, char* argv[]) {
     }
 
     f1 = read_number_at_file_and_ntohl(argv[1]);
-
     f2 = read_number_at_file_and_ntohl(argv[2]);
 
     printf("%d(0x%x) + %d(0x%x) = %d(0x%x)\n", f1, f1, f2, f2, f1+f2, f1+f2);
