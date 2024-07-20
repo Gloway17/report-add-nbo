@@ -2,6 +2,21 @@
 #include <stdint.h>
 #include <arpa/inet.h>
 
+uint32_t read_number_at_file_and_ntohl(char *filename) {
+    uint32_t buffer;
+
+    FILE *file = fopen(filename, "rb");
+    if (!file) {
+        printf("%s can not be open!\n", filename);
+        return -1;
+    }
+    fread(&buffer, sizeof(buffer), 1, file);
+
+    fclose(file);
+
+    return ntohl(buffer);
+}
+
 int main(int argc, char* argv[]) {
     uint32_t f1, f2;
 
@@ -10,25 +25,9 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    FILE *file1 = fopen(argv[1], "rb");
-    if (!file1) {
-        printf("%s can not be open!\n", argv[1]);
-        return -1;
-    }
-    fread(&f1, sizeof(f1), 1, file1);
-    f1 = ntohl(f1);
+    f1 = read_number_at_file_and_ntohl(argv[1]);
 
-    fclose(file1);
-
-    FILE *file2 = fopen(argv[2], "rb");
-    if (!file2) {
-        printf("%s can not be open!\n", argv[2]);
-        return -1;
-    }
-    fread(&f2, sizeof(f1), 1, file2);
-    f2 = ntohl(f2);
-
-    fclose(file2);
+    f2 = read_number_at_file_and_ntohl(argv[2]);
 
     printf("%d(0x%x) + %d(0x%x) = %d(0x%x)\n", f1, f1, f2, f2, f1+f2, f1+f2);
 
