@@ -3,7 +3,7 @@
 #include <arpa/inet.h>
 
 int main(int argc, char* argv[]) {
-    uint32_t f1, f2, result;
+    uint32_t f1, f2;
 
     if (argc != 3) {
         printf("syntax : add-nbo <file1> <file2>\n");
